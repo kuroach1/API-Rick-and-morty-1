@@ -1,55 +1,54 @@
-// trae la primera pagina de personajes al cargar nuestra pagina 
-
+// trae la primera página de personajes al cargar nuestra pagina 
 document.addEventListener('DOMContentLoaded', async () => {
   const id = 1; 
-  await getPage(id);
+  await getPage(id); // Llama a la función para obtener la primera página de personajes
 });
 
-
-
-
-// crea y agrega las opciones automaticamente al select 
+// crea y agrega las opciones automaticamente al select de páginas
 const selectPage = document.getElementById('select');
-for (let i = 1; i < 43; i++) {
-  const option = document.createElement('option');
-  option.value = i;
-  option.text = i;
-  option.className = 'page-link';
-  selectPage.appendChild(option);
+for (let i = 1; i < 43; i++) { // Recorre las 42 páginas de personajes
+  const option = document.createElement('option'); // Crea un elemento de opción
+  option.value = i; // Asigna el valor de la página a la opción
+  option.text = i; // Asigna el texto de la página a la opción
+  option.className = 'page-link'; // Añade una clase a la opción
+  selectPage.appendChild(option); // Agrega la opción al select
 }
 
-
-// crea y agrega las opciones automaticamente al select de busqueda por ID 
-
+// crea y agrega las opciones automáticamente al select de búsqueda por ID
 const selectCharacter = document.getElementById('select_one_character');
-for (let i = 1; i < 827; i++) {
-  const option = document.createElement('option');
-  option.value = i;
-  option.text = i;
-  option.className = 'page-link';
-  selectCharacter.appendChild(option);
+for (let i = 1; i < 827; i++) { // Recorre los IDs de los personajes
+  const option = document.createElement('option'); // Crea un elemento de opción
+  option.value = i; // Asigna el valor del ID a la opción
+  option.text = i; // Asigna el texto del ID a la opción
+  option.className = 'page-link'; // Añade una clase a la opción
+  selectCharacter.appendChild(option); // Agrega la opción al select
 }
 
-
-
-// función asincronica para traer las paginas que el usuario desee 
-
+// función asincrónica para traer las páginas que el usuario desee
 selectPage.addEventListener('click', async () => {
-  const value = selectPage.value;
-  const page = value;
-  await getPage(page);
-  
+  const value = selectPage.value; // Obtiene el valor seleccionado
+  const page = value; // Establece la página a obtener
+  await getPage(page); // Llama a la función para obtener la página seleccionada
 });
 
-const getPage = async (id) =>{
-  const container = document.querySelector('.container');
+// función asincrónica para traer el personaje que desee
+selectCharacter.addEventListener('click', async () => {
+  const value = selectCharacter.value; // Obtiene el valor seleccionado
+  const page = value; // Establece el ID del personaje a obtener
+  await getOneCharacter(page); // Llama a la función para obtener el personaje seleccionado
+});
+
+// Función para obtener y mostrar una página de personajes
+const getPage = async (id) => {
+  const container = document.querySelector('.container'); // Selecciona el contenedor donde se mostrarán los personajes
   try {
-    const response = await fetch(`https://rickandmortyapi.com/api/character/?page=${id}`);
-    const data = await response.json();
+    const response = await fetch(`https://rickandmortyapi.com/api/character/?page=${id}`); // Obtiene los datos de la página de la API
+    const data = await response.json(); // Convierte la respuesta en formato JSON
 
-    let html = '';
+    let html = ''; // Inicializa una variable para almacenar el HTML de las tarjetas de personajes
 
-    data.results.forEach(card => {
+    data.results.forEach(card => { // Recorre los personajes obtenidos
+      // Crea HTML para la tarjeta de cada personaje
       html += `
         <div class="container-card">
           <img src="${card.image}" alt="image of character" class="image">
@@ -71,34 +70,23 @@ const getPage = async (id) =>{
       `;
     });
 
-    container.innerHTML = html;
+    container.innerHTML = html; // Actualiza el contenido del contenedor con las tarjetas generadas
 
   } catch (err) {
-    console.error(err);
+    console.error(err); // Maneja cualquier error y lo muestra en la consola
   }
-}
+};
 
-
-
-// función asincronica para traer el personaje que desee
-
-selectCharacter.addEventListener('click', async () => {
-  const value = selectCharacter.value;
-  const page = value;
-  await getOneCharacter(page);
-
-});
-
-
-
+// Función para obtener y mostrar información de un personaje específico
 const getOneCharacter = async (id) => {
-  const container = document.querySelector('.container');
+  const container = document.querySelector('.container'); // Selecciona el contenedor donde se mostrará el personaje
   try {
-    const response = await fetch(`https://rickandmortyapi.com/api/character/${id}`);
-    const data = await response.json();
+    const response = await fetch(`https://rickandmortyapi.com/api/character/${id}`); // Obtiene los datos del personaje de la API
+    const data = await response.json(); // Convierte la respuesta en formato JSON
 
-    let html = '';
+    let html = ''; // Inicializa una variable para almacenar el HTML del personaje
 
+    // Crea HTML para la tarjeta del personaje
     html += `
       <div class="container-card">
         <img src="${data.image}" alt="image of character" class="image">
@@ -119,44 +107,42 @@ const getOneCharacter = async (id) => {
       </div>
     `;
 
-    container.innerHTML = html;
+    container.innerHTML = html; // Actualiza el contenido del contenedor con la tarjeta generada
 
   } catch (err) {
-    console.error(err);
+    console.error(err); // Maneja cualquier error y lo muestra en la consola
   }
 };
 
-// ...
-
-// filtrar nombre
-const inputFilter = document.querySelector('.filter')
+// Filtrar personajes por nombre
+const inputFilter = document.querySelector('.filter'); // Selecciona el campo de filtro por nombre
 inputFilter.addEventListener('input', () => {
-  const filterValue = inputFilter.value;
-  filterCharactersByName(filterValue);
+  const filterValue = inputFilter.value; // Obtiene el valor del campo de filtro
+  filterCharactersByName(filterValue); // Llama a la función para filtrar personajes por nombre
 });
 
-// función para filtrar personajes por nombre
+// Función para filtrar personajes por nombre
 const filterCharactersByName = async (name) => {
-  const container = document.querySelector('.container');
+  const container = document.querySelector('.container'); // Selecciona el contenedor donde se mostrarán los personajes
   try {
-    const response = await fetch(`https://rickandmortyapi.com/api/character/?name=${name}`);
-    const data = await response.json();
+    const response = await fetch(`https://rickandmortyapi.com/api/character/?name=${name}`); // Obtiene los datos de la API filtrados por nombre
+    const data = await response.json(); // Convierte la respuesta en formato JSON
 
-    if (data.error) {
-      container.innerHTML = `<p>No se encontraron personajes con ese nombre.</p>`;
+    if (data.error) { // Si hay un error en los datos
+      container.innerHTML = `<p>No se encontraron personajes con ese nombre.</p>`; // Muestra un mensaje de error en el contenedor
       return;
     }
 
-    const characterCards = data.results.map(card => generateCharacterCard(card)).join('');
-    container.innerHTML = characterCards;
+    const characterCards = data.results.map(card => generateCharacterCard(card)).join(''); // Genera HTML para las tarjetas de personajes
+    container.innerHTML = characterCards; // Actualiza el contenido del contenedor con las tarjetas generadas
 
   } catch (err) {
-    console.error(err);
-    container.innerHTML = `<p>Error al cargar los personajes.</p>`;
+    console.error(err); // Maneja cualquier error y lo muestra en la consola
+    container.innerHTML = `<p>Error al cargar los personajes.</p>`; // Muestra un mensaje de error en el contenedor
   }
 };
 
-// función para generar la tarjeta de un personaje
+// Función para generar HTML de la tarjeta de un personaje
 const generateCharacterCard = (card) => {
   return `
     <div class="container-card">
